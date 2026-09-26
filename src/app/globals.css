@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #0b1220;
+  --color-ink-soft: #4b5567;
+  --color-brand: #1b4fe0;
+  --color-brand-dark: #143bab;
+  --color-brand-light: #eaf0fe;
+  --color-accent: #0ea472;
+  --color-accent-light: #e5f7ef;
+  --color-bg: #fafbfc;
+  --color-surface: #ffffff;
+  --color-border: #e6e9ef;
+  --color-amber: #b8790a;
+  --color-amber-light: #fdf3e2;
+  --color-danger: #c94a3a;
+  --color-danger-light: #fbeae7;
+  --color-muted: #6b7280;
+  --color-muted-light: #eef0f3;
+  --color-ink-inverse: #f5f7fb;
+  --color-admin-bg: #0f1629;
+  --color-admin-surface: #151d34;
+  --color-admin-border: #26314f;
+
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-brand: var(--color-brand);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-brand-light: var(--color-brand-light);
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-amber: var(--color-amber);
+  --color-amber-light: var(--color-amber-light);
+  --color-danger: var(--color-danger);
+  --color-danger-light: var(--color-danger-light);
+  --color-muted: var(--color-muted);
+  --color-muted-light: var(--color-muted-light);
+  --color-ink-inverse: var(--color-ink-inverse);
+  --color-admin-bg: var(--color-admin-bg);
+  --color-admin-surface: var(--color-admin-surface);
+  --color-admin-border: var(--color-admin-border);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+a, button {
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, opacity 150ms ease, transform 150ms ease;
+}
+
+.text-display {
+  font-size: clamp(2.5rem, 4vw + 1rem, 3.75rem);
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+.text-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fade-in-up {
+  animation: fadeInUp 500ms ease both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.container-page {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
