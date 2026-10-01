@@ -10,7 +10,7 @@ export default function ProductPreviewCard() {
         <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
         <span className="ml-3 font-mono text-[11px] text-ink-soft">
-          Utang Tracker
+          LendZu
         </span>
         <span className="ml-auto rounded-full bg-muted-light px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide text-muted">
           Demo Preview
@@ -19,7 +19,7 @@ export default function ProductPreviewCard() {
 
       <div className="p-5">
         <p className="text-xs leading-relaxed text-ink-soft">
-          An example of how Utang Tracker organizes lending records &mdash;
+          An example of how LendZu organizes lending records &mdash;
           illustrative layout only, not real user or company data.
         </p>
 
@@ -49,7 +49,7 @@ export default function ProductPreviewCard() {
 
         <div className="mt-4 flex items-center justify-between rounded-lg border border-dashed border-border px-3 py-2.5">
           <span className="text-xs font-medium text-ink-soft">
-            Utang Tracker
+            LendZu
           </span>
           <span className="font-mono text-[10px] text-accent">Available</span>
         </div>

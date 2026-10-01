@@ -1,0 +1,741 @@
+diff --git a/src/app/admin/(protected)/apps/[id]/edit/page.tsx b/src/app/admin/(protected)/apps/[id]/edit/page.tsx
+index ca2313c..10f6367 100644
+--- a/src/app/admin/(protected)/apps/[id]/edit/page.tsx
++++ b/src/app/admin/(protected)/apps/[id]/edit/page.tsx
+@@ -30,7 +30,7 @@ export default async function EditApplicationPage({
+ 
+   return (
+     <div className="max-w-2xl">
+-      <Link href="/admin/apps" className="text-sm font-medium text-ink-soft hover:text-brand">
++      <Link href="/admin/apps" className="text-sm font-medium text-ink-soft hover:text-brand max-lg:inline-flex max-lg:min-h-11 max-lg:items-center">
+         &larr; Manage Applications
+       </Link>
+       <h1 className="mt-3 text-2xl font-semibold text-ink">
+diff --git a/src/app/admin/(protected)/apps/new/page.tsx b/src/app/admin/(protected)/apps/new/page.tsx
+index 0321e38..2261972 100644
+--- a/src/app/admin/(protected)/apps/new/page.tsx
++++ b/src/app/admin/(protected)/apps/new/page.tsx
+@@ -12,7 +12,7 @@ export default function NewApplicationPage() {
+ 
+   return (
+     <div className="max-w-2xl">
+-      <Link href="/admin/apps" className="text-sm font-medium text-ink-soft hover:text-brand">
++      <Link href="/admin/apps" className="text-sm font-medium text-ink-soft hover:text-brand max-lg:inline-flex max-lg:min-h-11 max-lg:items-center">
+         &larr; Manage Applications
+       </Link>
+       <h1 className="mt-3 text-2xl font-semibold text-ink">Add Application</h1>
+diff --git a/src/app/admin/(protected)/apps/page.tsx b/src/app/admin/(protected)/apps/page.tsx
+index f40c464..376707b 100644
+--- a/src/app/admin/(protected)/apps/page.tsx
++++ b/src/app/admin/(protected)/apps/page.tsx
+@@ -52,8 +52,8 @@ export default async function ManageApplicationsPage() {
+       </div>
+ 
+       <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-surface">
+-        <table className="w-full min-w-[880px] text-left text-sm">
+-          <thead>
++        <table className="w-full break-words text-left text-sm max-lg:block lg:min-w-[880px]">
++          <thead className="max-lg:sr-only">
+             <tr className="border-b border-border text-xs uppercase tracking-wide text-ink-soft">
+               <th className="px-5 py-3 font-medium">Application</th>
+               <th className="px-5 py-3 font-medium">Status</th>
+@@ -67,17 +67,17 @@ export default async function ManageApplicationsPage() {
+               <th className="px-5 py-3 font-medium">Actions</th>
+             </tr>
+           </thead>
+-          <tbody>
++          <tbody className="max-lg:block">
+             {liveApps.map((app) => (
+-              <tr key={app.id} className="border-b border-border last:border-0">
+-                <td className="px-5 py-4">
++              <tr key={app.id} className="border-b border-border last:border-0 max-lg:block max-lg:px-5 max-lg:py-4">
++                <td className="px-5 py-4 max-lg:block max-lg:px-0 max-lg:pb-2 max-lg:pt-0">
+                   <p className="font-medium text-ink">{app.name}</p>
+                   <p className="text-xs text-ink-soft">/{app.slug}</p>
+                 </td>
+-                <td className="px-5 py-4">
++                <td data-label="Status" className="px-5 py-4 max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   <StatusBadge status={app.status} />
+                 </td>
+-                <td className="px-5 py-4">
++                <td data-label="Featured" className="px-5 py-4 max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {app.featured ? (
+                     <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-light px-3 py-1 text-xs font-medium text-amber">
+                       <span className="h-1.5 w-1.5 rounded-full bg-current" />
+@@ -87,7 +87,7 @@ export default async function ManageApplicationsPage() {
+                     <span className="text-ink-soft">&mdash;</span>
+                   )}
+                 </td>
+-                <td className="px-5 py-4">
++                <td data-label="Icon" className="px-5 py-4 max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {app.icon_url ? (
+                     // eslint-disable-next-line @next/next/no-img-element
+                     <img
+@@ -101,16 +101,16 @@ export default async function ManageApplicationsPage() {
+                     </span>
+                   )}
+                 </td>
+-                <td className="px-5 py-4 text-ink-soft">
++                <td data-label="Screenshots" className="px-5 py-4 text-ink-soft max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {screenshotCounts[app.id] ?? 0}
+                 </td>
+-                <td className="px-5 py-4 text-ink-soft">
++                <td data-label="Version" className="px-5 py-4 text-ink-soft max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {app.version || "\u2014"}
+                 </td>
+-                <td className="px-5 py-4 text-ink-soft">
++                <td data-label="Download" className="px-5 py-4 text-ink-soft max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {app.download_url ? "Yes" : "No"}
+                 </td>
+-                <td className="px-5 py-4 text-ink-soft">
++                <td data-label="APK" className="px-5 py-4 text-ink-soft max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {app.apk_storage_path ? (
+                     <span>
+                       {app.apk_filename ?? "Uploaded"}
+@@ -128,10 +128,10 @@ export default async function ManageApplicationsPage() {
+                     <span>&mdash;</span>
+                   )}
+                 </td>
+-                <td className="px-5 py-4 text-ink-soft">
++                <td data-label="Active" className="px-5 py-4 text-ink-soft max-lg:flex max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-0 max-lg:py-1.5 max-lg:before:content-[attr(data-label)] max-lg:before:text-xs max-lg:before:font-medium max-lg:before:uppercase max-lg:before:tracking-wide max-lg:before:text-ink-soft">
+                   {app.active ? "Yes" : "No"}
+                 </td>
+-                <td className="px-5 py-4">
++                <td className="px-5 py-4 max-lg:block max-lg:px-0 max-lg:pb-0 max-lg:pt-3">
+                   <AppRowActions id={app.id} name={app.name} active={app.active} />
+                 </td>
+               </tr>
+diff --git a/src/app/admin/(protected)/layout.tsx b/src/app/admin/(protected)/layout.tsx
+index bc84c5f..7543cb3 100644
+--- a/src/app/admin/(protected)/layout.tsx
++++ b/src/app/admin/(protected)/layout.tsx
+@@ -64,25 +64,25 @@ export default async function ProtectedAdminLayout({
+         </div>
+       </aside>
+ 
+-      <div className="flex flex-1 flex-col">
++      <div className="flex min-w-0 flex-1 flex-col">
+         <header className="flex h-14 items-center justify-between border-b border-admin-border bg-admin-surface px-5 lg:hidden">
+-          <Link href="/admin" className="font-display text-base font-bold text-ink-inverse">
++          <Link href="/admin" className="inline-flex min-h-11 items-center font-display text-base font-bold text-ink-inverse">
+             JinZu Admin
+           </Link>
+           <form action={logout}>
+             <button
+               type="submit"
+-              className="rounded-full border border-admin-border px-3 py-1.5 text-xs font-semibold text-ink-inverse"
++              className="inline-flex min-h-11 items-center rounded-full border border-admin-border px-4 text-xs font-semibold text-ink-inverse"
+             >
+               Sign Out
+             </button>
+           </form>
+         </header>
+         <nav className="flex gap-2 border-b border-admin-border bg-admin-surface px-5 py-3 lg:hidden">
+-          <Link href="/admin" className="rounded-full px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/5">
++          <Link href="/admin" className="inline-flex min-h-11 items-center rounded-full px-4 text-xs font-medium text-white/70 hover:bg-white/5">
+             Dashboard
+           </Link>
+-          <Link href="/admin/apps" className="rounded-full px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/5">
++          <Link href="/admin/apps" className="inline-flex min-h-11 items-center rounded-full px-4 text-xs font-medium text-white/70 hover:bg-white/5">
+             Manage Applications
+           </Link>
+         </nav>
+diff --git a/src/app/admin/(protected)/page.tsx b/src/app/admin/(protected)/page.tsx
+index 39dfc4c..6bbee26 100644
+--- a/src/app/admin/(protected)/page.tsx
++++ b/src/app/admin/(protected)/page.tsx
+@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
+         {stats.map((stat) => (
+           <div
+             key={stat.label}
+-            className="rounded-2xl border border-border bg-surface p-5"
++            className="rounded-2xl border border-border bg-surface p-4 sm:p-5"
+           >
+             <p className="font-mono text-xs uppercase tracking-wide text-ink-soft">
+               {stat.label}
+diff --git a/src/app/admin/login/page.tsx b/src/app/admin/login/page.tsx
+index 0061ea6..6e3760c 100644
+--- a/src/app/admin/login/page.tsx
++++ b/src/app/admin/login/page.tsx
+@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
+               type="email"
+               required
+               autoComplete="email"
+-              className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++              className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+             />
+           </div>
+           <div>
+@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
+               type="password"
+               required
+               autoComplete="current-password"
+-              className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++              className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+             />
+           </div>
+ 
+diff --git a/src/app/apps/[slug]/page.tsx b/src/app/apps/[slug]/page.tsx
+index 7137b32..a6d2be7 100644
+--- a/src/app/apps/[slug]/page.tsx
++++ b/src/app/apps/[slug]/page.tsx
+@@ -68,10 +68,10 @@ export default async function AppPage({
+   return (
+     <>
+       <section className="border-b border-border bg-bg py-16">
+-        <div className="container-page">
++        <div className="container-page break-words">
+           <Link
+             href="/apps"
+-            className="text-sm font-medium text-ink-soft hover:text-brand"
++            className="text-sm font-medium text-ink-soft hover:text-brand max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
+           >
+             &larr; All Apps
+           </Link>
+@@ -102,7 +102,7 @@ export default async function AppPage({
+           </h1>
+           <p className="mt-2 text-lg font-medium text-brand">{app.tagline}</p>
+           {app.purchasable && price.current && (
+-            <p className="mt-2 flex items-baseline gap-3">
++            <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+               {price.hasDiscount && price.regular && (
+                 <span className="text-lg text-ink-soft line-through">{price.regular}</span>
+               )}
+@@ -113,7 +113,7 @@ export default async function AppPage({
+             {app.description}
+           </p>
+ 
+-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
++          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+             {isPurchaseAvailable(app) && (
+               <ButtonLink href={`/apps/${app.slug}/purchase`} variant="primary">
+                 Buy Now
+@@ -176,8 +176,8 @@ export default async function AppPage({
+       </section>
+ 
+       <section className="border-t border-border py-16">
+-        <div className="container-page grid gap-12 lg:grid-cols-2">
+-          <div>
++        <div className="container-page grid gap-12 break-words lg:grid-cols-2">
++          <div className="min-w-0">
+             <h2 className="text-xl font-semibold text-ink">Key Features</h2>
+             <ul className="mt-5 space-y-3">
+               {app.features.map((feature) => (
+@@ -191,7 +191,7 @@ export default async function AppPage({
+               ))}
+             </ul>
+           </div>
+-          <div>
++          <div className="min-w-0">
+             <h2 className="text-xl font-semibold text-ink">Who It&apos;s For</h2>
+             <ul className="mt-5 space-y-3">
+               {app.who_for.map((who) => (
+@@ -232,7 +232,7 @@ export default async function AppPage({
+           <div className="mt-5 divide-y divide-border rounded-2xl border border-border">
+             {faqs.map((faq) => (
+               <details key={faq.question} className="group p-5">
+-                <summary className="cursor-pointer list-none text-sm font-medium text-ink">
++                <summary className="flex cursor-pointer list-none items-center text-sm font-medium text-ink max-lg:min-h-11">
+                   {faq.question}
+                 </summary>
+                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+diff --git a/src/app/apps/[slug]/purchase/page.tsx b/src/app/apps/[slug]/purchase/page.tsx
+index c02f2e9..5360545 100644
+--- a/src/app/apps/[slug]/purchase/page.tsx
++++ b/src/app/apps/[slug]/purchase/page.tsx
+@@ -43,10 +43,10 @@ export default async function PurchasePage({
+ 
+   return (
+     <section className="border-b border-border bg-bg py-16">
+-      <div className="container-page max-w-3xl">
++      <div className="container-page max-w-3xl break-words">
+         <Link
+           href={`/apps/${app.slug}`}
+-          className="text-sm font-medium text-ink-soft hover:text-brand"
++          className="text-sm font-medium text-ink-soft hover:text-brand max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
+         >
+           &larr; Back to {app.name}
+         </Link>
+@@ -60,7 +60,7 @@ export default async function PurchasePage({
+               className="h-14 w-14 shrink-0 rounded-2xl border border-border object-cover"
+             />
+           )}
+-          <div>
++          <div className="min-w-0">
+             <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+               {app.name}
+             </h1>
+@@ -74,8 +74,8 @@ export default async function PurchasePage({
+           {app.short_description}
+         </p>
+ 
+-        <div className="mt-10 grid gap-8 sm:grid-cols-[1fr_1.2fr]">
+-          <div className="h-fit rounded-2xl border border-border bg-surface p-6">
++        <div className="mt-10 grid gap-8 md:grid-cols-[1fr_1.2fr]">
++          <div className="h-fit min-w-0 rounded-2xl border border-border bg-surface p-6">
+             <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
+               Order Summary
+             </h2>
+@@ -120,7 +120,7 @@ export default async function PurchasePage({
+             </dl>
+           </div>
+ 
+-          <div className="rounded-2xl border border-border bg-white p-6">
++          <div className="min-w-0 rounded-2xl border border-border bg-white p-6">
+             <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-soft">
+               Your Details
+             </h2>
+diff --git a/src/components/admin/ApkManager.tsx b/src/components/admin/ApkManager.tsx
+index 1c7e7bd..3f91108 100644
+--- a/src/components/admin/ApkManager.tsx
++++ b/src/components/admin/ApkManager.tsx
+@@ -119,7 +119,7 @@ export default function ApkManager({
+       {hasApk ? (
+         <div className="mt-2 rounded-xl border border-border bg-bg p-4">
+           <p className="text-sm font-medium text-ink">{filename}</p>
+-          <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-ink-soft">
++          <dl className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 text-xs text-ink-soft sm:grid-cols-2">
+             <div className="flex justify-between sm:block">
+               <dt className="inline sm:block">Size</dt>
+               <dd className="inline sm:block">{formatFileSize(sizeBytes) ?? "Unknown"}</dd>
+@@ -132,7 +132,7 @@ export default function ApkManager({
+             </div>
+           </dl>
+ 
+-          <label className="mt-3 flex items-center gap-2 text-sm font-medium text-ink">
++          <label className="mt-3 flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+             <input
+               type="checkbox"
+               checked={downloadEnabled}
+@@ -150,7 +150,7 @@ export default function ApkManager({
+           </p>
+ 
+           <div className="mt-4 flex flex-wrap gap-3">
+-            <label className="cursor-pointer rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand">
++            <label className="inline-flex cursor-pointer items-center rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand max-lg:min-h-11">
+               {busy ? "Working\u2026" : "Replace APK"}
+               <input
+                 ref={inputRef}
+@@ -168,7 +168,7 @@ export default function ApkManager({
+               type="button"
+               disabled={busy}
+               onClick={handleRemove}
+-              className="rounded-full border border-danger/40 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-danger-light disabled:opacity-60"
++              className="rounded-full border border-danger/40 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-danger-light disabled:opacity-60 max-lg:min-h-11"
+             >
+               {isPending ? "Removing\u2026" : "Remove APK"}
+             </button>
+@@ -177,7 +177,7 @@ export default function ApkManager({
+       ) : (
+         <div className="mt-2 rounded-xl border border-dashed border-border bg-bg p-4">
+           <p className="text-xs text-ink-soft">No APK uploaded yet.</p>
+-          <label className="mt-3 inline-block cursor-pointer rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand">
++          <label className="mt-3 inline-flex cursor-pointer items-center rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand max-lg:min-h-11">
+             {busy ? "Working\u2026" : "Choose APK"}
+             <input
+               ref={inputRef}
+diff --git a/src/components/admin/AppForm.tsx b/src/components/admin/AppForm.tsx
+index 088ade1..54c1a24 100644
+--- a/src/components/admin/AppForm.tsx
++++ b/src/components/admin/AppForm.tsx
+@@ -64,7 +64,7 @@ export default function AppForm({
+             id="status"
+             name="status"
+             defaultValue={initial?.status ?? "coming-soon"}
+-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+           >
+             {statusOptions.map((status) => (
+               <option key={status} value={status}>
+@@ -183,7 +183,7 @@ export default function AppForm({
+         </div>
+ 
+         <div className="mt-4 flex flex-wrap gap-6">
+-          <label className="flex items-center gap-2 text-sm font-medium text-ink">
++          <label className="flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+             <input
+               type="checkbox"
+               name="purchasable"
+@@ -192,7 +192,7 @@ export default function AppForm({
+             />
+             Purchasable (show price &amp; Buy Now publicly)
+           </label>
+-          <label className="flex items-center gap-2 text-sm font-medium text-ink">
++          <label className="flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+             <input
+               type="checkbox"
+               name="online_payment_enabled"
+@@ -201,7 +201,7 @@ export default function AppForm({
+             />
+             Online Payment Enabled
+           </label>
+-          <label className="flex items-center gap-2 text-sm font-medium text-ink">
++          <label className="flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+             <input
+               type="checkbox"
+               name="direct_payment_enabled"
+@@ -210,7 +210,7 @@ export default function AppForm({
+             />
+             Direct Payment Enabled
+           </label>
+-          <label className="flex items-center gap-2 text-sm font-medium text-ink">
++          <label className="flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+             <input
+               type="checkbox"
+               name="download_gated"
+@@ -230,7 +230,7 @@ export default function AppForm({
+       </div>
+ 
+       <div className="flex flex-wrap gap-6">
+-        <label className="flex items-center gap-2 text-sm font-medium text-ink">
++        <label className="flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+           <input
+             type="checkbox"
+             name="featured"
+@@ -239,7 +239,7 @@ export default function AppForm({
+           />
+           Featured
+         </label>
+-        <label className="flex items-center gap-2 text-sm font-medium text-ink">
++        <label className="flex items-center gap-2 text-sm font-medium text-ink max-lg:min-h-11">
+           <input
+             type="checkbox"
+             name="active"
+@@ -296,7 +296,7 @@ function Field({
+           rows={rows}
+           defaultValue={defaultValue}
+           placeholder={placeholder}
+-          className="mt-1.5 w-full resize-none rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full resize-none rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       ) : (
+         <input
+@@ -306,7 +306,7 @@ function Field({
+           required={required}
+           defaultValue={defaultValue}
+           placeholder={placeholder}
+-          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       )}
+       {hint && <p className="mt-1 text-xs text-ink-soft">{hint}</p>}
+diff --git a/src/components/admin/AppRowActions.tsx b/src/components/admin/AppRowActions.tsx
+index 739a2cc..8239e2c 100644
+--- a/src/components/admin/AppRowActions.tsx
++++ b/src/components/admin/AppRowActions.tsx
+@@ -20,7 +20,7 @@ export default function AppRowActions({
+     <div className="flex flex-wrap items-center gap-2">
+       <Link
+         href={`/admin/apps/${id}/edit`}
+-        className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand"
++        className="inline-flex items-center justify-center rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand max-lg:min-h-11"
+       >
+         Edit
+       </Link>
+@@ -33,7 +33,7 @@ export default function AppRowActions({
+             await toggleActive(id, !active);
+           })
+         }
+-        className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand disabled:opacity-60"
++        className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-ink hover:border-brand hover:text-brand disabled:opacity-60 max-lg:min-h-11"
+       >
+         {active ? "Deactivate" : "Activate"}
+       </button>
+@@ -46,7 +46,7 @@ export default function AppRowActions({
+           await softDeleteApp(id);
+         }}
+         trigger={
+-          <span className="inline-flex rounded-full border border-danger/40 px-4 py-1.5 text-xs font-semibold text-danger hover:bg-danger-light">
++          <span className="inline-flex items-center rounded-full border border-danger/40 px-4 py-1.5 text-xs font-semibold text-danger hover:bg-danger-light max-lg:min-h-11">
+             Delete
+           </span>
+         }
+diff --git a/src/components/admin/IconUploadField.tsx b/src/components/admin/IconUploadField.tsx
+index 1537066..52caabd 100644
+--- a/src/components/admin/IconUploadField.tsx
++++ b/src/components/admin/IconUploadField.tsx
+@@ -45,7 +45,7 @@ export default function IconUploadField({
+           )}
+         </div>
+ 
+-        <div className="flex flex-col gap-2">
++        <div className="flex min-w-0 flex-1 flex-col gap-2">
+           <form
+             ref={formRef}
+             action={uploadAction}
+@@ -65,7 +65,7 @@ export default function IconUploadField({
+                   formRef.current?.requestSubmit();
+                 }
+               }}
+-              className="text-xs text-ink-soft file:mr-3 file:rounded-full file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-ink"
++              className="w-full max-w-full text-xs text-ink-soft file:mr-3 file:rounded-full file:border file:border-border file:bg-surface file:px-3 file:py-1.5 max-lg:file:py-3.5 file:text-xs file:font-semibold file:text-ink"
+             />
+           </form>
+ 
+@@ -74,7 +74,7 @@ export default function IconUploadField({
+               <button
+                 type="submit"
+                 disabled={removing}
+-                className="w-fit rounded-full border border-danger/40 px-3 py-1 text-xs font-semibold text-danger hover:bg-danger-light disabled:opacity-60"
++                className="w-fit rounded-full border border-danger/40 px-3 py-1 text-xs font-semibold text-danger hover:bg-danger-light disabled:opacity-60 max-lg:min-h-11"
+               >
+                 {removing ? "Removing\u2026" : "Remove Icon"}
+               </button>
+diff --git a/src/components/admin/RestoreButton.tsx b/src/components/admin/RestoreButton.tsx
+index 2f07d25..7b03983 100644
+--- a/src/components/admin/RestoreButton.tsx
++++ b/src/components/admin/RestoreButton.tsx
+@@ -11,7 +11,7 @@ export default function RestoreButton({ id }: { id: string }) {
+       type="button"
+       disabled={isPending}
+       onClick={() => startTransition(async () => restoreApp(id))}
+-      className="rounded-full border border-accent/40 px-4 py-1.5 text-xs font-semibold text-accent hover:bg-accent-light disabled:opacity-60"
++      className="rounded-full border border-accent/40 px-4 py-1.5 text-xs font-semibold text-accent hover:bg-accent-light disabled:opacity-60 max-lg:min-h-11"
+     >
+       {isPending ? "Restoring\u2026" : "Restore"}
+     </button>
+diff --git a/src/components/admin/ScreenshotManager.tsx b/src/components/admin/ScreenshotManager.tsx
+index 934a3cc..dfe2184 100644
+--- a/src/components/admin/ScreenshotManager.tsx
++++ b/src/components/admin/ScreenshotManager.tsx
+@@ -38,7 +38,7 @@ export default function ScreenshotManager({
+           multiple
+           disabled={uploading}
+           onChange={() => formRef.current?.requestSubmit()}
+-          className="text-xs text-ink-soft file:mr-3 file:rounded-full file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-ink"
++          className="w-full max-w-full text-xs text-ink-soft file:mr-3 file:rounded-full file:border file:border-border file:bg-surface file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-ink"
+         />
+       </form>
+       {uploading && <p className="mt-2 text-xs text-ink-soft">Uploading…</p>}
+@@ -64,7 +64,7 @@ export default function ScreenshotManager({
+                         await moveAppScreenshot(applicationId, shot.id, "up");
+                       })
+                     }
+-                    className="rounded border border-border px-2 py-0.5 text-xs text-ink-soft disabled:opacity-40"
++                    className="rounded border border-border px-2 py-0.5 text-xs text-ink-soft disabled:opacity-40 max-lg:min-h-11 max-lg:min-w-11"
+                     aria-label="Move screenshot earlier"
+                   >
+                     &uarr;
+@@ -77,7 +77,7 @@ export default function ScreenshotManager({
+                         await moveAppScreenshot(applicationId, shot.id, "down");
+                       })
+                     }
+-                    className="rounded border border-border px-2 py-0.5 text-xs text-ink-soft disabled:opacity-40"
++                    className="rounded border border-border px-2 py-0.5 text-xs text-ink-soft disabled:opacity-40 max-lg:min-h-11 max-lg:min-w-11"
+                     aria-label="Move screenshot later"
+                   >
+                     &darr;
+@@ -91,7 +91,7 @@ export default function ScreenshotManager({
+                       await removeAppScreenshot(applicationId, shot.id);
+                     })
+                   }
+-                  className="rounded-full border border-danger/40 px-2 py-0.5 text-xs font-semibold text-danger hover:bg-danger-light disabled:opacity-60"
++                  className="rounded-full border border-danger/40 px-2 py-0.5 text-xs font-semibold text-danger hover:bg-danger-light disabled:opacity-60 max-lg:min-h-11"
+                 >
+                   Remove
+                 </button>
+diff --git a/src/components/layout/Footer.tsx b/src/components/layout/Footer.tsx
+index f66285f..1d15329 100644
+--- a/src/components/layout/Footer.tsx
++++ b/src/components/layout/Footer.tsx
+@@ -46,7 +46,7 @@ export default function Footer() {
+           <div className="col-span-2 md:col-span-2">
+             <Link
+               href="/"
+-              className="font-display text-lg font-bold tracking-tight text-ink"
++              className="inline-flex min-h-11 items-center font-display text-lg font-bold tracking-tight text-ink"
+             >
+               JinZu<span className="text-brand">.</span>
+             </Link>
+@@ -60,12 +60,12 @@ export default function Footer() {
+               <h3 className="font-mono text-xs uppercase tracking-wide text-ink-soft">
+                 {group.heading}
+               </h3>
+-              <ul className="mt-3 space-y-2">
++              <ul className="mt-3 lg:space-y-2">
+                 {group.links.map((link) => (
+                   <li key={link.href}>
+                     <Link
+                       href={link.href}
+-                      className="text-sm text-ink-soft hover:text-brand"
++                      className="block py-3 text-sm text-ink-soft hover:text-brand lg:py-0"
+                     >
+                       {link.label}
+                     </Link>
+diff --git a/src/components/layout/Navbar.tsx b/src/components/layout/Navbar.tsx
+index 75cf7b8..350bcd3 100644
+--- a/src/components/layout/Navbar.tsx
++++ b/src/components/layout/Navbar.tsx
+@@ -44,7 +44,7 @@ export default function Navbar() {
+       <div className="container-page flex h-16 items-center justify-between">
+         <Link
+           href="/"
+-          className="font-display text-lg font-bold tracking-tight text-ink"
++          className="inline-flex min-h-11 items-center font-display text-lg font-bold tracking-tight text-ink"
+         >
+           JinZu<span className="text-brand">.</span>
+         </Link>
+@@ -55,7 +55,7 @@ export default function Navbar() {
+               key={link.href}
+               href={link.href}
+               aria-current={isActive(link.href) ? "page" : undefined}
+-              className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
++              className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors max-lg:py-3 ${
+                 isActive(link.href)
+                   ? "text-brand"
+                   : "text-ink-soft hover:text-ink"
+@@ -77,7 +77,7 @@ export default function Navbar() {
+ 
+         <button
+           type="button"
+-          className="flex h-10 w-10 items-center justify-center rounded-lg text-ink md:hidden"
++          className="flex h-11 w-11 items-center justify-center rounded-lg text-ink md:hidden"
+           aria-label={open ? "Close menu" : "Open menu"}
+           aria-expanded={open}
+           onClick={() => setOpen((v) => !v)}
+@@ -95,7 +95,7 @@ export default function Navbar() {
+       </div>
+ 
+       {open && (
+-        <nav className="border-t border-border bg-surface px-6 pb-6 pt-2 md:hidden">
++        <nav className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-surface px-6 pb-6 pt-2 md:hidden">
+           <ul className="flex flex-col gap-1">
+             {navLinks.map((link) => (
+               <li key={link.href}>
+diff --git a/src/components/sections/ComingSoon.tsx b/src/components/sections/ComingSoon.tsx
+index 013d73d..7abde60 100644
+--- a/src/components/sections/ComingSoon.tsx
++++ b/src/components/sections/ComingSoon.tsx
+@@ -25,7 +25,7 @@ export default function ComingSoon({ apps }: { apps: AppRecord[] }) {
+               href={`/apps/${app.slug}`}
+               className="flex flex-wrap items-center justify-between gap-3 px-6 py-5 transition-colors hover:bg-surface"
+             >
+-              <div>
++              <div className="min-w-0 break-words">
+                 <p className="font-medium text-ink">{app.name}</p>
+                 <p className="mt-0.5 text-sm text-ink-soft">{app.tagline}</p>
+               </div>
+diff --git a/src/components/sections/ContactForm.tsx b/src/components/sections/ContactForm.tsx
+index eb31cff..68b799d 100644
+--- a/src/components/sections/ContactForm.tsx
++++ b/src/components/sections/ContactForm.tsx
+@@ -43,7 +43,7 @@ export default function ContactForm() {
+             name="name"
+             type="text"
+             required
+-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+           />
+         </div>
+         <div>
+@@ -58,7 +58,7 @@ export default function ContactForm() {
+             name="email"
+             type="email"
+             required
+-            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++            className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+           />
+         </div>
+       </div>
+@@ -72,7 +72,7 @@ export default function ContactForm() {
+           name="subject"
+           type="text"
+           required
+-          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       </div>
+ 
+@@ -85,7 +85,7 @@ export default function ContactForm() {
+           name="message"
+           rows={5}
+           required
+-          className="mt-1.5 w-full resize-none rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full resize-none rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       </div>
+ 
+diff --git a/src/components/sections/PurchaseForm.tsx b/src/components/sections/PurchaseForm.tsx
+index b0ac002..e8a95af 100644
+--- a/src/components/sections/PurchaseForm.tsx
++++ b/src/components/sections/PurchaseForm.tsx
+@@ -109,7 +109,7 @@ export default function PurchaseForm({
+           required
+           maxLength={100}
+           autoComplete="name"
+-          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       </div>
+ 
+@@ -124,7 +124,7 @@ export default function PurchaseForm({
+           required
+           maxLength={254}
+           autoComplete="email"
+-          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       </div>
+ 
+@@ -139,7 +139,7 @@ export default function PurchaseForm({
+           type="tel"
+           maxLength={30}
+           autoComplete="tel"
+-          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-brand"
++          className="mt-1.5 w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-base text-ink outline-none sm:max-lg:py-3 sm:text-sm focus:border-brand"
+         />
+       </div>
+ 
+@@ -153,7 +153,7 @@ export default function PurchaseForm({
+               <label
+                 key={method.value}
+                 htmlFor={`payment_method_${method.value}`}
+-                className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink hover:border-brand"
++                className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-ink hover:border-brand lg:py-2.5"
+               >
+                 <input
+                   id={`payment_method_${method.value}`}
+diff --git a/src/components/ui/AppCard.tsx b/src/components/ui/AppCard.tsx
+index a038298..4e8839a 100644
+--- a/src/components/ui/AppCard.tsx
++++ b/src/components/ui/AppCard.tsx
+@@ -29,7 +29,7 @@ export default function AppCard({ app }: { app: AppRecord }) {
+   const priceDisplay = app.purchasable ? price.current : null;
+ 
+   return (
+-    <div className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-[0_12px_32px_rgba(11,18,32,0.08)]">
++    <div className="group flex h-full min-w-0 flex-col break-words rounded-2xl border border-border bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-[0_12px_32px_rgba(11,18,32,0.08)]">
+       <div className="flex items-start justify-between gap-3">
+         {app.icon_url ? (
+           // eslint-disable-next-line @next/next/no-img-element
+@@ -46,7 +46,7 @@ export default function AppCard({ app }: { app: AppRecord }) {
+         <StatusBadge status={app.status} />
+       </div>
+ 
+-      <div className="mt-4 flex items-center justify-between gap-2">
++      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+         <span className="font-mono text-[11px] uppercase tracking-wide text-ink-soft">
+           {app.category}
+         </span>
+@@ -90,7 +90,7 @@ export default function AppCard({ app }: { app: AppRecord }) {
+       <div className="mt-6 pt-4 border-t border-border">
+         <Link
+           href={`/apps/${app.slug}`}
+-          className="inline-flex items-center gap-1 text-sm font-semibold text-brand transition-transform group-hover:gap-2"
++          className="inline-flex items-center gap-1 text-sm font-semibold text-brand transition-transform group-hover:gap-2 max-lg:min-h-11"
+         >
+           Learn More
+           <span aria-hidden="true">&rarr;</span>
+diff --git a/src/components/ui/FaqAccordion.tsx b/src/components/ui/FaqAccordion.tsx
+index a14996d..00444e3 100644
+--- a/src/components/ui/FaqAccordion.tsx
++++ b/src/components/ui/FaqAccordion.tsx
+@@ -8,7 +8,7 @@ export default function FaqAccordion({ items }: { items: FaqItem[] }) {
+     <div className="divide-y divide-border rounded-2xl border border-border">
+       {items.map((item) => (
+         <details key={item.question} className="group p-5">
+-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-ink">
++          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-ink max-lg:min-h-11">
+             {item.question}
+             <span
+               className="shrink-0 text-ink-soft transition-transform duration-150 group-open:rotate-45"

@@ -10,7 +10,7 @@ export default function UtangTrackerPreview() {
         </span>
       </div>
       <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-soft">
-        Below is an example of the kind of information Utang Tracker can
+        Below is an example of the kind of information LendZu can
         organize &mdash; not real user or company data.
       </p>
 

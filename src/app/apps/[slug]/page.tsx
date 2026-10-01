@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getApps, getAppBySlug, getAppScreenshots } from "@/data/apps";
-import { getDownloadCta, isValidHttpUrl } from "@/lib/types";
+import {
+  getDownloadCta,
+  isValidHttpUrl,
+  getPriceDisplay,
+  isPurchaseAvailable,
+} from "@/lib/types";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { ButtonLink } from "@/components/ui/Button";
 import AppCard from "@/components/ui/AppCard";
-import UtangTrackerPreview from "@/components/sections/UtangTrackerPreview";
 
 export const revalidate = 0;
 
@@ -36,14 +40,24 @@ export default async function AppPage({
   const allApps = await getApps();
   const related = allApps.filter((a) => a.slug !== app.slug).slice(0, 3);
   const cta = getDownloadCta(app);
+  const price = getPriceDisplay(app.price, app.discounted_price, app.currency);
   const screenshots = await getAppScreenshots(app.id);
+
+  const pricingAnswer = (() => {
+    if (!app.purchasable || !price.current) {
+      return `${app.name} does not currently have pricing set. Check the Downloads page or ask us directly for the latest.`;
+    }
+    if (price.hasDiscount) {
+      return `${app.name} is available for ${price.current}, discounted from ${price.regular}.`;
+    }
+    return `${app.name} is available for ${price.current}.`;
+  })();
 
   const faqs = [
     app.status === "available"
       ? {
-          question: `Is ${app.name} free to use?`,
-          answer:
-            "Pricing details will be shared closer to public release. Check the Downloads page for the latest.",
+          question: `How much does ${app.name} cost?`,
+          answer: pricingAnswer,
         }
       : {
           question: "Is there more information available yet?",
@@ -87,14 +101,27 @@ export default async function AppPage({
             {app.name}
           </h1>
           <p className="mt-2 text-lg font-medium text-brand">{app.tagline}</p>
+          {app.purchasable && price.current && (
+            <p className="mt-2 flex items-baseline gap-3">
+              {price.hasDiscount && price.regular && (
+                <span className="text-lg text-ink-soft line-through">{price.regular}</span>
+              )}
+              <span className="text-2xl font-semibold text-ink">{price.current}</span>
+            </p>
+          )}
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft">
             {app.description}
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            {cta.active && app.download_url ? (
+            {isPurchaseAvailable(app) && (
+              <ButtonLink href={`/apps/${app.slug}/purchase`} variant="primary">
+                Buy Now
+              </ButtonLink>
+            )}
+            {cta.active && cta.href ? (
               <a
-                href={app.download_url}
+                href={cta.href}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
               >
                 {cta.label}
@@ -123,10 +150,8 @@ export default async function AppPage({
 
       <section className="py-16">
         <div className="container-page">
-          {app.slug === "utang-tracker" && <UtangTrackerPreview />}
-
           {screenshots.length > 0 ? (
-            <div className={app.slug === "utang-tracker" ? "mt-12" : ""}>
+            <div>
               <h2 className="text-lg font-semibold text-ink">Screenshots</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {screenshots.map((shot) => (
@@ -141,13 +166,11 @@ export default async function AppPage({
               </div>
             </div>
           ) : (
-            app.slug !== "utang-tracker" && (
-              <div className="flex h-72 items-center justify-center rounded-2xl border border-dashed border-border bg-surface sm:h-96">
-                <p className="font-mono text-xs uppercase tracking-wide text-ink-soft">
-                  Screenshots coming soon
-                </p>
-              </div>
-            )
+            <div className="flex h-72 items-center justify-center rounded-2xl border border-dashed border-border bg-surface sm:h-96">
+              <p className="font-mono text-xs uppercase tracking-wide text-ink-soft">
+                Screenshots coming soon
+              </p>
+            </div>
           )}
         </div>
       </section>
@@ -184,32 +207,6 @@ export default async function AppPage({
           </div>
         </div>
       </section>
-
-      {app.slug === "utang-tracker" && (
-        <section className="border-t border-border bg-surface py-16">
-          <div className="container-page max-w-3xl">
-            <h2 className="text-xl font-semibold text-ink">How It Helps</h2>
-            <ul className="mt-5 space-y-3">
-              {[
-                "Keeps lending records organized in one place instead of scattered notes",
-                "Tracks who owes money and how much",
-                "Records payments as they come in",
-                "Shows outstanding balances at a glance",
-                "Helps manage related personal expenses alongside lending",
-                "Makes it easier to review financial activity over time",
-              ].map((point) => (
-                <li
-                  key={point}
-                  className="flex items-start gap-3 text-sm leading-relaxed text-ink-soft"
-                >
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
-                  {point}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
 
       <section className="border-t border-border bg-surface py-16">
         <div className="container-page">

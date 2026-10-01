@@ -4,6 +4,7 @@ import { statusOptions, statusLabels, type AppRecord, type AppScreenshot } from 
 import { Button } from "@/components/ui/Button";
 import IconUploadField from "@/components/admin/IconUploadField";
 import ScreenshotManager from "@/components/admin/ScreenshotManager";
+import ApkManager from "@/components/admin/ApkManager";
 
 export default function AppForm({
   action,
@@ -28,10 +29,17 @@ export default function AppForm({
           <div className="space-y-6">
             <IconUploadField applicationId={applicationId} initialUrl={initial?.icon_url ?? null} />
             <ScreenshotManager applicationId={applicationId} screenshots={screenshots ?? []} />
+            <ApkManager
+              applicationId={applicationId}
+              initialFilename={initial?.apk_filename ?? null}
+              initialSizeBytes={initial?.apk_size_bytes ?? null}
+              initialUploadedAt={initial?.apk_uploaded_at ?? null}
+              initialDownloadEnabled={initial?.download_enabled ?? false}
+            />
           </div>
         ) : (
           <p className="text-sm text-ink-soft">
-            Save this application first — then reopen it here to upload an icon and screenshots.
+            Save this application first — then reopen it here to upload an icon, screenshots, and an APK.
           </p>
         )}
       </div>
@@ -39,7 +47,7 @@ export default function AppForm({
       <form action={action} className="space-y-6">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Application Name" name="name" required defaultValue={initial?.name} />
-        <Field label="Slug" name="slug" required defaultValue={initial?.slug} hint="Used in the URL, e.g. utang-tracker" />
+        <Field label="Slug" name="slug" required defaultValue={initial?.slug} hint="Used in the URL, e.g. lendzu" />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -131,6 +139,94 @@ export default function AppForm({
           defaultValue={initial?.who_for?.join("\n")}
           hint="One audience per line."
         />
+      </div>
+
+      <div className="rounded-2xl border border-border bg-bg p-5">
+        <h3 className="text-sm font-semibold text-ink">Storefront &amp; Pricing</h3>
+        <p className="mt-1 text-xs text-ink-soft">
+          Controls whether this app can be purchased and what the public
+          purchase page shows.
+        </p>
+
+        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <Field
+            label="Price"
+            name="price"
+            defaultValue={initial?.price !== null && initial?.price !== undefined ? String(initial.price) : ""}
+            placeholder="49.99"
+            hint="Leave blank for no price set yet."
+          />
+          <Field
+            label="Discounted Price"
+            name="discounted_price"
+            defaultValue={
+              initial?.discounted_price !== null && initial?.discounted_price !== undefined
+                ? String(initial.discounted_price)
+                : ""
+            }
+            placeholder="34.99"
+            hint="Leave blank for no discount. Must be lower than Price."
+          />
+          <Field
+            label="Currency"
+            name="currency"
+            defaultValue={initial?.currency ?? "PHP"}
+            placeholder="PHP"
+            hint="3-letter code, e.g. PHP, USD."
+          />
+          <Field
+            label="Platform"
+            name="platform"
+            defaultValue={initial?.platform ?? ""}
+            placeholder="Windows, Web, Android"
+          />
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-6">
+          <label className="flex items-center gap-2 text-sm font-medium text-ink">
+            <input
+              type="checkbox"
+              name="purchasable"
+              defaultChecked={initial?.purchasable ?? false}
+              className="h-4 w-4 rounded border-border"
+            />
+            Purchasable (show price &amp; Buy Now publicly)
+          </label>
+          <label className="flex items-center gap-2 text-sm font-medium text-ink">
+            <input
+              type="checkbox"
+              name="online_payment_enabled"
+              defaultChecked={initial?.online_payment_enabled ?? false}
+              className="h-4 w-4 rounded border-border"
+            />
+            Online Payment Enabled
+          </label>
+          <label className="flex items-center gap-2 text-sm font-medium text-ink">
+            <input
+              type="checkbox"
+              name="direct_payment_enabled"
+              defaultChecked={initial?.direct_payment_enabled ?? false}
+              className="h-4 w-4 rounded border-border"
+            />
+            Direct Payment Enabled
+          </label>
+          <label className="flex items-center gap-2 text-sm font-medium text-ink">
+            <input
+              type="checkbox"
+              name="download_gated"
+              defaultChecked={initial?.download_gated ?? false}
+              className="h-4 w-4 rounded border-border"
+            />
+            Require Purchase Before Download
+          </label>
+        </div>
+        <p className="mt-2 text-xs text-ink-soft">
+          A gated download (uploaded APK or external Download URL) is never
+          public. It is only served through a valid download grant for a
+          paid, confirmed order. Order confirmation and grant issuing are
+          not automated yet, so paying customers are not issued downloads
+          automatically.
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-6">

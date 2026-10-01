@@ -3,7 +3,17 @@ import Link from "next/link";
 const footerLinks = [
   {
     heading: "Products",
-    links: [{ href: "/apps", label: "All Apps" }],
+    links: [
+      { href: "/apps", label: "All Apps" },
+      // "LendZu" is the current public name for the product whose existing
+      // database slug is still "utang-tracker" (see AppForm.tsx / [slug]/page.tsx).
+      // The route is intentionally left as-is here — renaming the slug is a
+      // separate change (DB update + the slug checks in [slug]/page.tsx),
+      // not something this footer edit should touch.
+      { href: "/apps/lendzu", label: "LendZu" },
+      { href: "/apps/inventory-manager", label: "Inventory Manager" },
+      { href: "/apps/expense-manager", label: "Expense Manager" },
+    ],
   },
   {
     heading: "Company",

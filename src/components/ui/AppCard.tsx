@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AppRecord } from "@/lib/types";
+import { AppRecord, formatPrice } from "@/lib/types";
 import StatusBadge from "./StatusBadge";
 
 const initials = (name: string) =>
@@ -12,6 +12,8 @@ const initials = (name: string) =>
     .toUpperCase();
 
 export default function AppCard({ app }: { app: AppRecord }) {
+  const priceDisplay = app.purchasable ? formatPrice(app.price, app.currency) : null;
+
   return (
     <div className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-[0_12px_32px_rgba(11,18,32,0.08)]">
       <div className="flex items-start justify-between gap-3">
@@ -30,9 +32,14 @@ export default function AppCard({ app }: { app: AppRecord }) {
         <StatusBadge status={app.status} />
       </div>
 
-      <span className="mt-4 font-mono text-[11px] uppercase tracking-wide text-ink-soft">
-        {app.category}
-      </span>
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <span className="font-mono text-[11px] uppercase tracking-wide text-ink-soft">
+          {app.category}
+        </span>
+        {priceDisplay && (
+          <span className="text-sm font-semibold text-brand">{priceDisplay}</span>
+        )}
+      </div>
       <h3 className="mt-1 text-xl font-semibold text-ink">{app.name}</h3>
       <p className="mt-1 text-sm font-medium text-brand">{app.tagline}</p>
       <p className="mt-3 text-sm leading-relaxed text-ink-soft">

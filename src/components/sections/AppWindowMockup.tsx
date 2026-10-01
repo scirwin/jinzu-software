@@ -48,7 +48,7 @@ export default function AppWindowMockup() {
         {/* product suite rows */}
         <div className="mt-4 space-y-2">
           {[
-            { name: "Utang Tracker", status: "Available", tone: "text-accent" },
+            { name: "LendZu", status: "Available", tone: "text-accent" },
             { name: "JIMS", status: "Building", tone: "text-brand" },
             { name: "Expense Manager", status: "Planned", tone: "text-amber" },
           ].map((row) => (

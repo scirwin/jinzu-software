@@ -62,6 +62,7 @@ export default async function ManageApplicationsPage() {
               <th className="px-5 py-3 font-medium">Screenshots</th>
               <th className="px-5 py-3 font-medium">Version</th>
               <th className="px-5 py-3 font-medium">Download</th>
+              <th className="px-5 py-3 font-medium">APK</th>
               <th className="px-5 py-3 font-medium">Active</th>
               <th className="px-5 py-3 font-medium">Actions</th>
             </tr>
@@ -110,6 +111,24 @@ export default async function ManageApplicationsPage() {
                   {app.download_url ? "Yes" : "No"}
                 </td>
                 <td className="px-5 py-4 text-ink-soft">
+                  {app.apk_storage_path ? (
+                    <span>
+                      {app.apk_filename ?? "Uploaded"}
+                      <span className="ml-1 text-xs">
+                        (
+                        {app.download_gated
+                          ? "gated"
+                          : app.download_enabled
+                          ? "enabled"
+                          : "disabled"}
+                        )
+                      </span>
+                    </span>
+                  ) : (
+                    <span>&mdash;</span>
+                  )}
+                </td>
+                <td className="px-5 py-4 text-ink-soft">
                   {app.active ? "Yes" : "No"}
                 </td>
                 <td className="px-5 py-4">
@@ -119,7 +138,7 @@ export default async function ManageApplicationsPage() {
             ))}
             {liveApps.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-5 py-10 text-center text-ink-soft">
+                <td colSpan={10} className="px-5 py-10 text-center text-ink-soft">
                   No applications yet. Add your first one above.
                 </td>
               </tr>

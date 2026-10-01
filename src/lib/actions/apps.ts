@@ -31,7 +31,10 @@ function revalidatePublicPages(slug?: string) {
   revalidatePath("/apps");
   revalidatePath("/downloads");
   revalidatePath("/admin/apps");
-  if (slug) revalidatePath(`/apps/${slug}`);
+  if (slug) {
+    revalidatePath(`/apps/${slug}`);
+    revalidatePath(`/apps/${slug}/purchase`);
+  }
 }
 
 function parseListField(raw: FormDataEntryValue | null): string[] {
@@ -40,6 +43,28 @@ function parseListField(raw: FormDataEntryValue | null): string[] {
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
+}
+
+/**
+ * Parses the admin-entered price as a validated decimal string, never as a
+ * JS float — the string is passed straight through to Supabase, which lets
+ * Postgres cast it directly into the `numeric(10,2)` column. This avoids
+ * any IEEE-754 floating-point rounding of money entirely.
+ */
+function parsePriceInput(raw: FormDataEntryValue | null): {
+  price: string | null;
+  error?: string;
+} {
+  const trimmed = String(raw ?? "").trim();
+  if (!trimmed) return { price: null };
+  if (!/^\d{1,8}(\.\d{1,2})?$/.test(trimmed)) {
+    return {
+      price: null,
+      error:
+        "Price must be a valid amount (e.g. 49.99), with at most 2 decimal places.",
+    };
+  }
+  return { price: trimmed };
 }
 
 export interface AppFormState {
@@ -64,7 +89,49 @@ function buildRecordFromForm(formData: FormData) {
     active: formData.get("active") === "on",
     features: parseListField(formData.get("features")),
     who_for: parseListField(formData.get("who_for")),
+    currency: String(formData.get("currency") ?? "").trim() || "PHP",
+    purchasable: formData.get("purchasable") === "on",
+    online_payment_enabled: formData.get("online_payment_enabled") === "on",
+    direct_payment_enabled: formData.get("direct_payment_enabled") === "on",
+    platform: String(formData.get("platform") ?? "").trim() || null,
+    download_gated: formData.get("download_gated") === "on",
   };
+}
+
+/**
+ * Same validated-decimal-string approach as `parsePriceInput`, plus the
+ * business rule that a discount must actually be a discount — it can
+ * only be set when a regular price exists, and it must be lower than it.
+ * This mirrors (and fails the same way as) the DB check constraint added
+ * in 0004_apk_and_discount.sql, so the admin gets a friendly message
+ * instead of a raw Postgres constraint-violation error.
+ */
+function parseDiscountedPriceInput(
+  raw: FormDataEntryValue | null,
+  price: string | null
+): { discountedPrice: string | null; error?: string } {
+  const trimmed = String(raw ?? "").trim();
+  if (!trimmed) return { discountedPrice: null };
+  if (!/^\d{1,8}(\.\d{1,2})?$/.test(trimmed)) {
+    return {
+      discountedPrice: null,
+      error:
+        "Discounted price must be a valid amount (e.g. 39.99), with at most 2 decimal places.",
+    };
+  }
+  if (price === null) {
+    return {
+      discountedPrice: null,
+      error: "Set a regular price before adding a discounted price.",
+    };
+  }
+  if (Number(trimmed) >= Number(price)) {
+    return {
+      discountedPrice: null,
+      error: "Discounted price must be lower than the regular price.",
+    };
+  }
+  return { discountedPrice: trimmed };
 }
 
 export async function createApp(
@@ -78,7 +145,21 @@ export async function createApp(
     return { error: "Name and slug are required." };
   }
 
-  const { error } = await supabase.from("applications").insert(record);
+  const { price, error: priceError } = parsePriceInput(formData.get("price"));
+  if (priceError) {
+    return { error: priceError };
+  }
+  const { discountedPrice, error: discountedPriceError } = parseDiscountedPriceInput(
+    formData.get("discounted_price"),
+    price
+  );
+  if (discountedPriceError) {
+    return { error: discountedPriceError };
+  }
+
+  const { error } = await supabase
+    .from("applications")
+    .insert({ ...record, price, discounted_price: discountedPrice });
   if (error) {
     return { error: error.message };
   }
@@ -99,9 +180,21 @@ export async function updateApp(
     return { error: "Name and slug are required." };
   }
 
+  const { price, error: priceError } = parsePriceInput(formData.get("price"));
+  if (priceError) {
+    return { error: priceError };
+  }
+  const { discountedPrice, error: discountedPriceError } = parseDiscountedPriceInput(
+    formData.get("discounted_price"),
+    price
+  );
+  if (discountedPriceError) {
+    return { error: discountedPriceError };
+  }
+
   const { error } = await supabase
     .from("applications")
-    .update(record)
+    .update({ ...record, price, discounted_price: discountedPrice })
     .eq("id", id);
 
   if (error) {
